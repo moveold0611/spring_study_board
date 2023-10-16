@@ -1,5 +1,6 @@
 package com.board.spring_board.controller;
 
+import com.board.spring_board.aop.annotation.ValidAop;
 import com.board.spring_board.dto.RegisterBoardReqDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,7 +14,7 @@ import javax.validation.Valid;
 @RestController
 public class BoardController {
 
-    @CrossOrigin
+    @ValidAop
     @PostMapping("/board/{category}")
     public ResponseEntity<?> register(@Valid @PathVariable RegisterBoardReqDto registerBoardReqDto, BindingResult bindingResult) {
 

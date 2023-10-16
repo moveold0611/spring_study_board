@@ -1,16 +1,13 @@
 package com.board.spring_board.exception;
 
-import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Getter
-public class SignupException extends RuntimeException {
-
+public class ValidCheckException extends RuntimeException{
     private Map<String, String> errorMap = new HashMap<>();
-    public SignupException(Map<String, String> errorMap) {
-        super("회원가입 오류");
+
+    public ValidCheckException(Map<String, String> errorMap) {
+        super("유효성 검사 오류");
         this.errorMap = errorMap;
         errorMap.forEach((k, v) -> {
             System.out.println(k+ ": " + v);

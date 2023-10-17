@@ -17,7 +17,6 @@ public class ReturnAop {
 
     @Around("pointCut()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-
         Object target = proceedingJoinPoint.proceed();
         System.out.println("리턴: " + target);
         return  target;

@@ -27,6 +27,8 @@ function Signup(props) {
         console.log(signupUser)
     }
 
+    
+
     const handleSignupSubmit = async () => {
         try {
             console.log(signupUser)

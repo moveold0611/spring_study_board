@@ -2,6 +2,7 @@ package com.board.spring_board.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class SignupReqDto {
+
 
     @Email
     private String email;
@@ -21,5 +23,4 @@ public class SignupReqDto {
 
     @NotBlank
     private String nickname;
-
 }

@@ -7,5 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
     public Integer saveUser(User user);
     public User findUserbyEmail(String email);
-    public String checkUnique(String email, String nickname);
+    public Integer checkSignupUnique(String email, String nickname);
 }

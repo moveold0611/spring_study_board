@@ -2,23 +2,26 @@ package com.board.spring_board.security;
 
 
 import com.board.spring_board.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+
 
 import java.util.Collection;
 
-@Component
+@Getter
 public class PrincipalUser implements UserDetails {
 
     private User user;
     private String email;
     private String password;
+    private int enabled;
 
     public PrincipalUser(User user) {
         this.user = user;
         this.email = user.getEmail();
         this.password = user.getPassword();
+        this.enabled = user.getEnabled();
     }
 
     @Override
@@ -38,21 +41,24 @@ public class PrincipalUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        if(enabled == 0) {
+            return false;
+        }
+        return true;
     }
 }

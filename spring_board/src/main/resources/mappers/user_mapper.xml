@@ -4,55 +4,38 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.spring_board.repository.UserMapper">
+    <resultMap id="userMap" type="com.board.spring_board.entity.User">
+        <id property="userId" column="user_id"/>
+        <result property="email" column="email" />
+        <result property="password" column="password" />
+        <result property="name" column="name" />
+        <result property="nickname" column="nickname" />
+        <result property="enabled" column="enabled" />
+    </resultMap>
+
     <insert id="saveUser" parameterType="com.board.spring_board.entity.User">
         insert into
             user_tb
         values(0, #{email}, #{password}, #{name}, #{nickname}, 0)
     </insert>
 
-    <select id="checkUnique" parameterType="string" resultType="string">
+    <select id="findUserbyEmail" resultMap="userMap">
         select
-            case when (
-                select
-                    count(*)
-                from
-                    user_tb
-                where
-                    email = #{email}
-                ) as emailCount = 1,
-            then "email"
-
-                when (
-                    select
-                        count(*)
-                    from
-                        user_tb
-                    where
-                        nickname = #{nickname}
-                    ) as nicknameCount
-            then "nickname"
-
-            else null
-        end as result
-    </select>
-
-    <select id="findUserbyEmail" parameterType="string" resultType="com.board.spring_board.entity.User">
-        select
-            ut.user_id,
+            user_id,
             email,
             password,
             name,
-            nickname
+            nickname,
             enabled
         from
-            user_tb ut
-            left outer join authority_tb at on(at.user_id = ut.user_tb)
-            left outer join role_tb rt on(rt.role_id = at.role_id)
+            user_tb
+<!--            left outer join authority_tb at on(at.user_id = ut.user_tb)-->
+<!--            left outer join role_tb rt on(rt.role_id = at.role_id)-->
         where
             email = #{email}
     </select>
 
-    <select id="test" parameterType="string" resultType="Integer">
+    <select id="checkSignupUnique" parameterType="string" resultType="Integer">
         select
             (select
                 if(count(*) > 0, 1, 0)
@@ -70,5 +53,34 @@
         ) as result
     </select>
 
+
+
+<!--  test   -->
+    <select id="test" parameterType="string" resultType="string">
+        select
+        case when (
+        select
+        count(*)
+        from
+        user_tb
+        where
+        email = #{email}
+        ) as emailCount = 1,
+        then "email"
+
+        when (
+        select
+        count(*)
+        from
+        user_tb
+        where
+        nickname = #{nickname}
+        ) as nicknameCount
+        then "nickname"
+
+        else null
+        end as result
+<!--    test    -->
+    </select>
 
 </mapper>

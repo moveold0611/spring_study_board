@@ -21,24 +21,35 @@ public class SignupService {
     @Transactional(rollbackFor = SignupException.class)
     public boolean SignupService(SignupReqDto signupReqDto) {
         System.out.println("service");
-        System.out.println(signupReqDto.getPassword());
-
-        User user = User.builder()
-                .email(signupReqDto.getEmail())
-                .password(passwordEncoder.encode(signupReqDto.getPassword()))
-                .name(signupReqDto.getName())
-                .nickname(signupReqDto.getNickname())
-                .build();
+        User user = signupReqDto.toEntityBySignupReqDto(passwordEncoder);
 
         System.out.println(user);
+        Integer uniqueCheck = userMapper.checkSignupUnique(user.getEmail(), user.getNickname());
+
+        switch (uniqueCheck) {
+            case 1:
+                Map<String, String> errorMap = new HashMap<>();
+                errorMap.put("message", "email 중복");
+                throw new SignupException(errorMap);
+
+            case 2:
+                Map<String, String> errorMap2 = new HashMap<>();
+                errorMap2.put("message", "nickname 중복");
+                throw new SignupException(errorMap2);
+
+            case 3:
+                Map<String, String> errorMap3 = new HashMap<>();
+                errorMap3.put("message", "email, nickname 중복");
+                throw new SignupException(errorMap3);
+        }
 
         boolean success = userMapper.saveUser(user) > 0;
-
         if(!success) {
             Map<String, String> errorMap = new HashMap<>();
             errorMap.put("message", "Signup Service 오류 발생");
             throw new SignupException(errorMap);
         }
+
         return success;
     }
 }

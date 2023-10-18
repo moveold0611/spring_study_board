@@ -2,10 +2,14 @@ package com.board.spring_board.controller;
 
 import com.board.spring_board.dto.SigninReqDto;
 import com.board.spring_board.entity.User;
+import com.board.spring_board.exception.SigninException;
 import com.board.spring_board.service.SigninService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,8 +20,19 @@ public class SigninController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> Signin(@RequestBody SigninReqDto signinReqDto) {
-        User user =  signinService.SigninService(signinReqDto);
+        String token =  signinService.SigninService(signinReqDto);
 
-        return ResponseEntity.ok().body(user);
+        if(token == null) {
+            Map<String, String> errorMap = new HashMap<>();
+            errorMap.put("message", "로그인 오류");
+            throw new SigninException(errorMap);
+        }
+        return ResponseEntity.ok().body(token);
+    }
+
+    @GetMapping("/auth/token/authenticate")
+    public ResponseEntity<?> authenticate(@RequestHeader(value = "Authorization") String token) {
+
+        return ResponseEntity.ok(200);
     }
 }

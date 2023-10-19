@@ -11,7 +11,3 @@ export const signin = async (signinUser) => {
     return response;
 }
 
-export const authToken = async () => {
-    const response = await instance.get("/account/principal")
-    return response;
-}

@@ -1,19 +1,19 @@
-import { Route, Routes, useNavigate } from 'react-router';
+import { Route, Routes } from 'react-router';
 import './App.css';
-import Auth from './components/Auth/Auth';
-import Board from './components/Board/Board';
 import Home from './pages/Home/Home';
 import RootLayout from './components/RootLayout/RootLayout';
 import { useQuery } from 'react-query';
-import { authToken } from './apis/api/account';
+import { connentPrincipal } from './apis/api/principal';
+import AuthRoute from './components/Routes/AuthRoute';
+import BoardRoute from './components/Routes/BoardRoute';
+import AccountRoute from './components/Routes/AccountRoute';
 
 
 function App() {
-  const navigate = useNavigate();
 
   const getPrincipal = useQuery(["getPrincipal"], async () => {
     try {
-      const response = await authToken();
+      const response = await connentPrincipal();
       return response;
     } catch (error) {
       throw new Error(error);
@@ -25,13 +25,18 @@ function App() {
   }
   );
 
+  if(getPrincipal.isLoading) {
+    return <>로딩</>
+  }
+
   return (
     <>
       <RootLayout>
         <Routes>        
           <Route path='/' element={<Home />}/>
-          <Route path='/auth/*' element={<Auth />}/>
-          <Route path='/board/*' element={<Board />}/>
+          <Route path='/auth/*' element={<AuthRoute />}/>
+          <Route path='/board/*' element={<BoardRoute />}/>
+          <Route path='/account/*' element={<AccountRoute />} />
         </Routes>
       </RootLayout>
     </>

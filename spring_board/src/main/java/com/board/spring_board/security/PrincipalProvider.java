@@ -27,21 +27,11 @@ public class PrincipalProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = (String) authentication.getName();
         String password = (String) authentication.getCredentials();
-        System.out.println("test "+ email);
-        System.out.println(password);
 
         UserDetails principalUser = principalDetailService.loadUserByUsername(email);
-
-        if(principalUser == null) {
-            throw new UsernameNotFoundException("UsernameNotFound");
-        }
-
         if (!passwordEncoder.matches(password, principalUser.getPassword())) {
             throw new BadCredentialsException("BadCredentials");
         }
-
-
-
         return new UsernamePasswordAuthenticationToken(principalUser, password, principalUser.getAuthorities());
     }
 

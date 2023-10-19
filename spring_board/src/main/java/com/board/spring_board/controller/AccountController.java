@@ -10,17 +10,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
+@RequestMapping("/account")
 public class AccountController {
     private final UserMapper userMapper;
 
-    @GetMapping("/account/principal")
+    @GetMapping("/principal")
     public ResponseEntity<?> getPrincipal() {
-        System.out.println("test");
+        System.out.println("Account Controller 진입");
         PrincipalUser principalUser
+
                 = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = principalUser.getUser();

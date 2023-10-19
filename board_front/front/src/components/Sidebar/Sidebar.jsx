@@ -33,7 +33,7 @@ function Sidebar(props) {
         console.log(principal);
         console.log(principalStatue);
         localStorage.removeItem("accessToken");
-        window.location.replace("/");
+        window.location.replace("/"); // react의 상태 초기화, naivgate는 유지
     }
 
     return (

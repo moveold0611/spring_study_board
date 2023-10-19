@@ -1,6 +1,8 @@
 package com.board.spring_board.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -21,14 +23,16 @@ public class PrincipalEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse resp, AuthenticationException auth) throws IOException, ServletException {
+        resp.setStatus(HttpStatus.UNAUTHORIZED.value());
         resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
 
         Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("errorMessage", getErrorMessage(auth));
-        JsonMapper jsonMapper = new JsonMapper();
-        String errorJsonMessage = jsonMapper.writeValueAsString(errorMap);
+        errorMap.put("unauthorized", "인증 실패");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String errorJsonMessage = objectMapper.writeValueAsString(errorMap);
 
         resp.getWriter().println(errorJsonMessage);
+        resp.getWriter().println();
     }
 
     private String getErrorMessage(AuthenticationException authException) {

@@ -23,10 +23,10 @@ public class JwtAuthenticationFilter extends GenericFilter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) req;
         String token = removeBearerByToken(httpServletRequest.getHeader("Authorization"));
-        System.out.println(token);
+        System.out.println("Filter " + token);
 
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
-
+        System.out.println("Authentication " + authentication);
         if(authentication != null) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

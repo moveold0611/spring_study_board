@@ -37,7 +37,6 @@ public class SigninService {
                     (signinReqDto.getEmail(), signinReqDto.getPassword());
 
         Authentication authentication = principalProvider.authenticate(authenticationToken);
-
         String accessToken = jwtTokenProvider.generateAccessToken(authentication);
 
         if (accessToken == null) {

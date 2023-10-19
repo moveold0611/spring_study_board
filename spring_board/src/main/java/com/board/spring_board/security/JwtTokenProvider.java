@@ -22,30 +22,25 @@ import java.security.Key;
 @Component
 public class JwtTokenProvider {
     private final Key key;
-    private final PrincipalDetailService principalDetailService;
     private final UserMapper userMapper;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secret,
-                            @Autowired PrincipalDetailService principalDetailService,
                             @Autowired UserMapper userMapper) {
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.userMapper = userMapper;
-        this.principalDetailService = principalDetailService;
+
     }
 
     public String generateAccessToken(Authentication authentication) {
         String email = authentication.getName();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        boolean enabled = userDetails.isEnabled();
-
-        JwtBuilder jwtBuilder = Jwts.builder()
-                .setSubject("AccessToken")
-                .claim("enabled", enabled)
-                .signWith(key, SignatureAlgorithm.HS256);
 
         User user = userMapper.findUserbyEmail(email);
         if(user != null) {
-            return jwtBuilder.claim("email", user.getEmail()).compact();
+            return Jwts.builder()
+                    .setSubject("AccessToken")
+                    .claim("email", email)
+                    .signWith(key, SignatureAlgorithm.HS256)
+                    .compact();
         }
         return null;
     }
@@ -68,10 +63,12 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
+
         if(claims == null) {
             return null;
         }
         User user = userMapper.findUserbyEmail(claims.get("email").toString());
+
         if (user == null) {
             return null;
         }

@@ -17,9 +17,10 @@ public class PrincipalDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userMapper.findUserbyEmail(email);
-        if(user != null) {
-            return new PrincipalUser(user);
+
+        if(user == null) {
+            throw new UsernameNotFoundException("usernameNotFound");
         }
-        return null;
+        return new PrincipalUser(user);
     }
 }

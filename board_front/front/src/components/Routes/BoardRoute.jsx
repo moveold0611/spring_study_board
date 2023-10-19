@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
 
-function Board(props) {
+function BoardRoute(props) {
     return (
     <Routes>    
         <Route path='/:category' element={<></>}/>
@@ -11,4 +11,4 @@ function Board(props) {
     );
 }
 
-export default Board;
+export default BoardRoute;

@@ -31,7 +31,7 @@ function Signin(props) {
         localStorage.setItem("accessToken" ,"Bearer " + response.data);
         window.location.replace("/");
         } catch (error) {
-            if(error.response.status == 401) {
+            if(error.response.status === 401) {
                 alert(error.response.data.authError)
             }
         }

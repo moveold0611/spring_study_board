@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
@@ -34,7 +36,7 @@ public class JwtTokenProvider {
     public String generateAccessToken(Authentication authentication) {
         String email = authentication.getName();
 
-        User user = userMapper.findUserbyEmail(email);
+        User user = userMapper.findUserByEmail(email);
         if(user != null) {
             return Jwts.builder()
                     .setSubject("AccessToken")
@@ -67,13 +69,28 @@ public class JwtTokenProvider {
         if(claims == null) {
             return null;
         }
-        User user = userMapper.findUserbyEmail(claims.get("email").toString());
+        User user = userMapper.findUserByEmail(claims.get("email").toString());
 
         if (user == null) {
             return null;
         }
         PrincipalUser principalUser = new PrincipalUser(user);
         return new UsernamePasswordAuthenticationToken(principalUser, null, principalUser.getAuthorities());
+    }
+
+    public String generateAuthMailToken(String email) {
+        Date date = new Date(new Date().getTime() + 1000 * 60 * 5);
+
+        try {
+            return Jwts.builder()
+                    .setSubject("AuthenticationEmailToken")
+                    .claim("email", email)
+                    .setExpiration(date)
+                    .signWith(key, SignatureAlgorithm.HS256)
+                    .compact();
+        }catch (Exception e) {
+            return null;
+        }
     }
 
 

@@ -32,12 +32,23 @@ public class SigninService {
     private final PrincipalProvider principalProvider;
 
     public String SigninService(SigninReqDto signinReqDto) {
+        System.out.println("test2");
+
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken
                     (signinReqDto.getEmail(), signinReqDto.getPassword());
 
+        System.out.println("test3");
+        System.out.println(authenticationToken);
+
         Authentication authentication = principalProvider.authenticate(authenticationToken);
+        System.out.println("test4");
+        System.out.println(authentication);
+
+
         String accessToken = jwtTokenProvider.generateAccessToken(authentication);
+        System.out.println("test5");
+        System.out.println(accessToken);
 
         if (accessToken == null) {
             Map<String, String> errorMap = new HashMap<>();

@@ -24,8 +24,8 @@ public class User {
         return PrincipalRespDto.builder()
                 .userId(userId)
                 .email(email)
-                .name(password)
-                .nickname(name)
+                .name(name)
+                .nickname(nickname)
                 .enabled(enabled > 0)
                 .build();
     }

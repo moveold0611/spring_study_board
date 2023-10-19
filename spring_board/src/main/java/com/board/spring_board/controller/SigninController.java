@@ -24,6 +24,8 @@ public class SigninController {
     @ValidAop
     @PostMapping("/signin")
     public ResponseEntity<?> Signin(@Valid @RequestBody SigninReqDto signinReqDto, BindingResult bindingResult) {
+        System.out.println("test1");
+
         String token =  signinService.SigninService(signinReqDto);
 
         if(token == null) {
@@ -34,7 +36,7 @@ public class SigninController {
         return ResponseEntity.ok().body(token);
     }
 
-    @GetMapping("/auth/token/authenticate")
+    @GetMapping("/token/authenticate")
     public ResponseEntity<?> authenticate(@RequestHeader(value = "Authorization") String token) {
 
         return ResponseEntity.ok(200);

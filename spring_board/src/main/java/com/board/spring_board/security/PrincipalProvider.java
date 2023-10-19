@@ -29,6 +29,7 @@ public class PrincipalProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
 
         UserDetails principalUser = principalDetailService.loadUserByUsername(email);
+        System.out.println("test44");
         if (!passwordEncoder.matches(password, principalUser.getPassword())) {
             throw new BadCredentialsException("BadCredentials");
         }

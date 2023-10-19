@@ -7,26 +7,21 @@ import com.board.spring_board.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
-@RestControllerAdvice
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/account")
 public class AccountController {
     private final UserMapper userMapper;
 
-    @GetMapping("/principal")
+    @GetMapping("/account/principal")
     public ResponseEntity<?> getPrincipal() {
         System.out.println("Account Controller 진입");
         PrincipalUser principalUser
-
                 = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User user = principalUser.getUser();
+
         PrincipalRespDto principalRespDto = user.toPrincipalRespDtoByUser();
 
         return  ResponseEntity.ok().body(principalRespDto);

@@ -2,10 +2,7 @@ package com.board.spring_board.controller;
 
 
 
-import com.board.spring_board.exception.BoardException;
-import com.board.spring_board.exception.SigninException;
-import com.board.spring_board.exception.SignupException;
-import com.board.spring_board.exception.ValidCheckException;
+import com.board.spring_board.exception.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -33,6 +30,13 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(SigninException.class)
     public ResponseEntity<?> signinHandlerException(SigninException signinException) {
         return ResponseEntity.badRequest().body(signinException.getErrorMap());
+    }
+
+    @ExceptionHandler(AuthMailException.class)
+    public ResponseEntity<?> mailException(AuthMailException authMailException) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("authMail", authMailException.getMessage());
+        return ResponseEntity.ok().body(errorMap);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)

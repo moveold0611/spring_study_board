@@ -19,7 +19,7 @@
         values(0, #{email}, #{password}, #{name}, #{nickname}, 0)
     </insert>
 
-    <select id="findUserbyEmail" resultMap="userMap">
+    <select id="findUserByEmail" resultMap="userMap">
         select
             user_id,
             email,
@@ -29,8 +29,6 @@
             enabled
         from
             user_tb
-<!--            left outer join authority_tb at on(at.user_id = ut.user_tb)-->
-<!--            left outer join role_tb rt on(rt.role_id = at.role_id)-->
         where
             email = #{email}
     </select>
@@ -82,5 +80,15 @@
         end as result
 <!--    test    -->
     </select>
+
+
+    <update id="updateEnabled" >
+        update
+            user_tb
+        set
+            enabled = 1
+        where
+            email = #{email}
+    </update>
 
 </mapper>

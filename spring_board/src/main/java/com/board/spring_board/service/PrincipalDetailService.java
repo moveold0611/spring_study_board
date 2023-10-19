@@ -16,8 +16,13 @@ public class PrincipalDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userMapper.findUserbyEmail(email);
+        System.out.println("test44");
+        System.out.println(email);
 
+        User user = userMapper.findUserByEmail(email);
+
+        System.out.println("test55");
+        System.out.println(user);
         if(user == null) {
             throw new UsernameNotFoundException("usernameNotFound");
         }

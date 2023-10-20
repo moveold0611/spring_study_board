@@ -11,11 +11,12 @@
         <result property="name" column="name" />
         <result property="nickname" column="nickname" />
         <result property="enabled" column="enabled" />
+        <result property="profileUrl" column="profile_url"/>
     </resultMap>
 
     <insert id="saveUser" parameterType="com.board.spring_board.entity.User">
         insert into
-            user_tb
+            user_tb(user_id, email, password, name, nickname, enabled)
         values(0, #{email}, #{password}, #{name}, #{nickname}, 0)
     </insert>
 
@@ -26,7 +27,8 @@
             password,
             name,
             nickname,
-            enabled
+            enabled,
+            profile_url
         from
             user_tb
         where
@@ -81,12 +83,29 @@
 <!--    test    -->
     </select>
 
-
     <update id="updateEnabled" >
         update
             user_tb
         set
             enabled = 1
+        where
+            email = #{email}
+    </update>
+
+    <update id="updateProfileUrl" parameterType="com.board.spring_board.entity.User">
+        update
+            user_tb
+        set
+            profile_url = #{profileUrl}
+        where
+            user_id = #{userId}
+    </update>
+
+    <update id="updatePassword" parameterType="com.board.spring_board.entity.User">
+        update
+            user_tb
+        set
+            password = #{password}
         where
             email = #{email}
     </update>

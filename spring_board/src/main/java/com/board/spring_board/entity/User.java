@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +17,7 @@ public class User {
     private String password;
     private String name;
     private String nickname;
+    private String profileUrl;
     private int enabled; // default = 0
 
     public PrincipalRespDto toPrincipalRespDtoByUser() {
@@ -27,6 +27,7 @@ public class User {
                 .name(name)
                 .nickname(nickname)
                 .enabled(enabled > 0)
+                .profileUrl(profileUrl)
                 .build();
     }
 }

@@ -1,12 +1,22 @@
 package com.board.spring_board.service;
 
+import com.board.spring_board.dto.UpdatePasswordReqDto;
+import com.board.spring_board.dto.UpdateProfileImgReqDto;
 import com.board.spring_board.entity.User;
 import com.board.spring_board.exception.AuthMailException;
+import com.board.spring_board.exception.MismatchedPasswordException;
 import com.board.spring_board.repository.UserMapper;
 import com.board.spring_board.security.JwtTokenProvider;
+import com.board.spring_board.security.PrincipalUser;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +24,8 @@ public class AccountService {
 
     private final UserMapper userMapper;
     private final JwtTokenProvider jwtTokenProvider;
+    private final BCryptPasswordEncoder passwordEncoder;
+
 
     public String AccountService() {
         String userInfo = null;
@@ -40,4 +52,39 @@ public class AccountService {
         return success;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateProfileImgService(UpdateProfileImgReqDto updateProfileImgReqDto) {
+        PrincipalUser principalUser =
+                (PrincipalUser) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+        return userMapper.updateProfileUrl(User.builder()
+                .userId(principalUser.getUser().getUserId())
+                .profileUrl(updateProfileImgReqDto.getProfileImgUrl())
+                .build()) > 0;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updatePasswordService(UpdatePasswordReqDto updatePasswordReqDto) {
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication().getName();
+
+        User user = userMapper.findUserByEmail(email);
+
+        if(Objects.equals(updatePasswordReqDto.getOldPassword(), updatePasswordReqDto.getCheckNewPassword())) {
+            throw new MismatchedPasswordException();
+        }
+
+        if (!passwordEncoder.matches(updatePasswordReqDto.getOldPassword() ,user.getPassword())) {
+            throw new BadCredentialsException("BadCredential");
+        }
+
+        return userMapper.updatePassword(User.builder()
+                .email(email)
+                .password(passwordEncoder.encode(updatePasswordReqDto.getNewPassword()))
+                .build()) > 0;
+    }
 }

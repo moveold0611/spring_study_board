@@ -13,4 +13,5 @@ public class PrincipalRespDto {
     private String name;
     private String nickname;
     private boolean enabled;
+    private String profileUrl;
 }

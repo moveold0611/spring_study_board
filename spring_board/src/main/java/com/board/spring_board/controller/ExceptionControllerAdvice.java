@@ -26,6 +26,12 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.badRequest().body(signupException.getErrorMap());
     }
 
+    @ExceptionHandler(MismatchedPasswordException.class)
+    public ResponseEntity<?> mismatchedPasswordException(MismatchedPasswordException mismatchedPasswordException) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("mismatched", mismatchedPasswordException.getMessage());
+        return ResponseEntity.badRequest().body(errorMap);
+    }
 
     @ExceptionHandler(SigninException.class)
     public ResponseEntity<?> signinHandlerException(SigninException signinException) {

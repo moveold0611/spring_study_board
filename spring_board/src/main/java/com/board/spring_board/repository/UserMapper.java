@@ -9,4 +9,6 @@ public interface UserMapper {
     public User findUserByEmail(String email);
     public Integer checkSignupUnique(String email, String nickname);
     public Integer updateEnabled(String email);
+    public Integer updateProfileUrl(User user);
+    public Integer updatePassword(User user);
 }

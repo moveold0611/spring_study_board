@@ -2,10 +2,10 @@
 import React from 'react';
 import RootContainer from '../../components/RootContainer/RootContainer';
 
-function Home(props) {
+function Home({ children }) {
     return (
         <RootContainer>
-
+            {children}
         </RootContainer>
     );
 }

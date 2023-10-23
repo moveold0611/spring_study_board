@@ -46,7 +46,6 @@ public class AccountController {
     @ValidAop
     @PutMapping("/account/password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody  UpdatePasswordReqDto updatePasswordReqDto, BindingResult bindingResult) {
-        System.out.println(updatePasswordReqDto);
         return  ResponseEntity.ok().body(accountService.updatePasswordService(updatePasswordReqDto));
     }
 }

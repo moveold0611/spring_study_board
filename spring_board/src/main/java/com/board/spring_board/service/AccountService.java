@@ -68,13 +68,14 @@ public class AccountService {
 
     @Transactional(rollbackFor = Exception.class)
     public boolean updatePasswordService(UpdatePasswordReqDto updatePasswordReqDto) {
+
         String email = SecurityContextHolder
                 .getContext()
                 .getAuthentication().getName();
 
         User user = userMapper.findUserByEmail(email);
 
-        if(Objects.equals(updatePasswordReqDto.getOldPassword(), updatePasswordReqDto.getCheckNewPassword())) {
+        if(!Objects.equals(updatePasswordReqDto.getNewPassword(), updatePasswordReqDto.getCheckNewPassword())) {
             throw new MismatchedPasswordException();
         }
 

@@ -38,7 +38,8 @@ public class SigninController {
 
     @GetMapping("/token/authenticate")
     public ResponseEntity<?> authenticate(@RequestHeader(value = "Authorization") String token) {
-
         return ResponseEntity.ok(200);
     }
+
+
 }

@@ -14,4 +14,7 @@ public class PrincipalRespDto {
     private String nickname;
     private boolean enabled;
     private String profileUrl;
+    private String oauth2Id;
+    private String provider;
+
 }

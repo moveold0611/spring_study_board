@@ -1,5 +1,33 @@
-
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: 8db14cdae6d14b1a48c0b8dd592e2c33 # 앱 키
+#            clientSecret: 2ece4989116194da087add96e9a56a73 # Admin 키
+            redirectUri:  http://localhost:8080/login/oauth2/code/kakao # 정해진 uri 요청
+            authorizationGrantType: authorization_code
+            clientAuthenticationMethod: POST
+            clientName: Kakao # 첫글자 대문자
+          naver:
+            clientId: GPx1fCwq25iu7ICB4s3Y # 앱 키
+            clientSecret: XEpC7b6bM0
+            redirectUri: http://localhost:8080/login/oauth2/code/naver # 정해진 uri 요청
+            authorizationGrantType: authorization_code
+            clientAuthenticationMethod: POST
+            clientName: Naver # 첫글자 대문자
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize #인가 코드 받기
+            tokenUri: https://kauth.kakao.com/oauth/token # 토큰 인가 받기
+            userInfoUri: https://kapi.kakao.com/v2/user/me # 사용자 정보 가져오기
+            userNameAttribute: id # 식별자 (kakao)
+          naver:
+            authorizationUri: https://nid.naver.com/oauth2.0/authorize #인가 코드 받기
+            tokenUri: https://nid.naver.com/oauth2.0/token # 토큰 인가 받기
+            userInfoUri: https://openapi.naver.com/v1/nid/me # 사용자 정보 가져오기
+            userNameAttribute: response # 식별자
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://db1.c8shwtesowey.ap-northeast-2.rds.amazonaws.com:3306/board

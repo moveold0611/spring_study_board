@@ -19,6 +19,8 @@ public class User {
     private String nickname;
     private String profileUrl;
     private int enabled; // default = 0
+    private String oauth2Id;
+    private String provider;
 
     public PrincipalRespDto toPrincipalRespDtoByUser() {
         return PrincipalRespDto.builder()
@@ -28,6 +30,8 @@ public class User {
                 .nickname(nickname)
                 .enabled(enabled > 0)
                 .profileUrl(profileUrl)
+                .oauth2Id(oauth2Id)
+                .provider(provider)
                 .build();
     }
 }

@@ -12,12 +12,38 @@
         <result property="nickname" column="nickname" />
         <result property="enabled" column="enabled" />
         <result property="profileUrl" column="profile_url"/>
+        <result property="oauth2Id" column="oauth2_id"/>
+        <result property="provider" column="provider"/>
     </resultMap>
+
+<!--    <insert id="saveUser" parameterType="com.board.spring_board.entity.User">-->
+<!--        insert into-->
+<!--            user_tb(user_id, email, password, name, nickname, enabled)-->
+<!--        values(0, #{email}, #{password}, #{name}, #{nickname}, 0)-->
+<!--    </insert>-->
 
     <insert id="saveUser" parameterType="com.board.spring_board.entity.User">
         insert into
-            user_tb(user_id, email, password, name, nickname, enabled)
-        values(0, #{email}, #{password}, #{name}, #{nickname}, 0)
+            user_tb
+        values(0,
+            #{email},
+            #{password},
+            #{name},
+            #{nickname},
+            0,
+<!--            <if test="profileUrl == null">default</if>-->
+<!--            <if test="profileUrl != null">#{profileUrl}</if>,-->
+        <choose>
+            <when test='profileUrl == null or profileUrl.equals("")'>
+                default,
+            </when>
+            <otherwise>
+                #{profileUrl},
+            </otherwise>
+        </choose>
+            #{oauth2Id},
+            #{provider}
+        )
     </insert>
 
     <select id="findUserByEmail" resultMap="userMap">
@@ -28,7 +54,9 @@
             name,
             nickname,
             enabled,
-            profile_url
+            profile_url,
+            oauth2_id,
+            provider
         from
             user_tb
         where
@@ -109,5 +137,22 @@
         where
             email = #{email}
     </update>
+
+    <select id="findUserByOauth2Id" resultMap="userMap">
+        select
+            user_id,
+            email,
+            password,
+            name,
+            nickname,
+            enabled,
+            profile_url,
+            oauth2_id,
+            provider
+        from
+            user_tb
+        where
+            oauth2_id = #{oauth2Id}
+    </select>
 
 </mapper>

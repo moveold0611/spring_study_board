@@ -35,8 +35,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
 
 
 
-
-
     public String removeBearerByToken(String bearerToken) {
         if(!StringUtils.hasText(bearerToken)) {
             return null;

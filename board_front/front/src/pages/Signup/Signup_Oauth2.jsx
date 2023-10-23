@@ -8,21 +8,11 @@ import { useEffect } from 'react';
 function SignupOauth2(props) {
     const [ searchParams, setSearchParams ] = useSearchParams();
     const navigate = useNavigate();
-    const [ element, setElement ] = useState(<></>);
 
     useEffect(()=> {
         if(!window.confirm("등록되지 않은 간편로그인 사용자입니다. 회원등록 하시겠습니까?")) {   
             window.location.replace("/auth/signin");
         }
-
-        setElement(<div>
-            <div><input type='email' name='email' placeholder='이메일' onChange={handleChange}></input></div>
-            <div><input type='password' name='password' placeholder='비밀번호' onChange={handleChange}></input></div>
-            <div><input type='text' name='name' placeholder='이름' value={signupUser.name} disabled={true}></input></div>
-            <div><input type='text' name='nickname' placeholder='닉네임' onChange={handleChange}></input></div>
-            <div><button onClick={handleSignupSubmit}>가입하기</button></div>
-            <div><button onClick={handleSigninClick}>로그인</button></div>
-        </div>)
     }, [])
 
 
@@ -49,6 +39,7 @@ function SignupOauth2(props) {
     }
 
     const handleChange = (e) => {
+        console.log(provider)
         const { name, value } = e.target;
         setSignupUser({
             ...signupUser,
@@ -69,7 +60,14 @@ function SignupOauth2(props) {
         }
     }
 
-    return element;
+    return (<div>
+        <div><input type='email' name='email' placeholder='이메일' onChange={handleChange}></input></div>
+        <div><input type='password' name='password' placeholder='비밀번호' onChange={handleChange}></input></div>
+        <div><input type='text' name='name' placeholder='이름' value={signupUser.name} disabled={true}></input></div>
+        <div><input type='text' name='nickname' placeholder='닉네임' onChange={handleChange}></input></div>
+        <div><button onClick={handleSignupSubmit}>가입하기</button></div>
+        <div><button onClick={handleSigninClick}>로그인</button></div>
+    </div>);
 }
 
 export default SignupOauth2;

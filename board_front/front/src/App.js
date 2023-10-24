@@ -34,9 +34,9 @@ function App() {
       <RootLayout>
         <Routes>        
           <Route path='/' element={<Home />}/>
-          <Route path='/auth/*' element={<AuthRoute />}/>
-          <Route path='/board/*' element={<BoardRoute />}/>
-          <Route path='/account/*' element={<AccountRoute />} />
+          <Route path='auth/*' element={<AuthRoute />}/>
+          <Route path='board/*' element={<BoardRoute />}/>
+          <Route path='account/*' element={<AccountRoute />} />
         </Routes>
       </RootLayout>
     </>

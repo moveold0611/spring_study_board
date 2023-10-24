@@ -16,7 +16,7 @@ function AccountRoute(props) {
     return (
         <Routes>
             <Route path='/mypage' element={<Mypage />}/>
-            <Route path='/password' element={<EditPassword></EditPassword>}/>
+            <Route path='/password' element={<EditPassword/>}/>
         </Routes>
     );
 }

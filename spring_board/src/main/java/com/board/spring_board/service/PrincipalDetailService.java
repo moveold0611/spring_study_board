@@ -37,12 +37,13 @@ public class PrincipalDetailService implements UserDetailsService, OAuth2UserSer
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+        System.out.println(userRequest);
 
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response"); // 네이버는 response 필요
         String provider = userRequest.getClientRegistration().getClientName();
         response.put("provider", provider);
 
-        return new DefaultOAuth2User(new ArrayList<>(), response, "id"); // 네이버는 response 필요
+        return new DefaultOAuth2User(new ArrayList<>(), response, "id");
     }
 }

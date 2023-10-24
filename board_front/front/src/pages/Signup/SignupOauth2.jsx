@@ -47,7 +47,6 @@ function SignupOauth2(props) {
         })
         console.log(signupUser)
     }
-
     
 
     const handleSignupSubmit = async () => {
@@ -56,18 +55,26 @@ function SignupOauth2(props) {
             const response = await signup(signupUser);
             console.log(response)
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            if(Object.keys(error.response.data).includes("message")) {
+                // 중복된 이메일이 있다면 계정 통합 권유
+                if(window.confirm(`해당 이메일로 가입된 계정이 있습니다.\n ${signupUser.provider} 계정을 연동하시겠습니까?`)) {
+                        navigate(`/auth/signup/oauth2/merge?oauth2Id=${signupUser.oauth2Id}&email=${signupUser.email}&provider=${signupUser.provider}`);
+                }
+            }
         }
     }
 
-    return (<div>
-        <div><input type='email' name='email' placeholder='이메일' onChange={handleChange}></input></div>
-        <div><input type='password' name='password' placeholder='비밀번호' onChange={handleChange}></input></div>
-        <div><input type='text' name='name' placeholder='이름' value={signupUser.name} disabled={true}></input></div>
-        <div><input type='text' name='nickname' placeholder='닉네임' onChange={handleChange}></input></div>
-        <div><button onClick={handleSignupSubmit}>가입하기</button></div>
-        <div><button onClick={handleSigninClick}>로그인</button></div>
-    </div>);
+    return (
+        <div>
+            <div><input type='email' name='email' placeholder='이메일' onChange={handleChange}></input></div>
+            <div><input type='password' name='password' placeholder='비밀번호' onChange={handleChange}></input></div>
+            <div><input type='text' name='name' placeholder='이름' value={signupUser.name} disabled={true}></input></div>
+            <div><input type='text' name='nickname' placeholder='닉네임' onChange={handleChange}></input></div>
+            <div><button onClick={handleSignupSubmit}>가입하기</button></div>
+            <div><button onClick={handleSigninClick}>로그인</button></div>
+        </div>
+    );
 }
 
 export default SignupOauth2;

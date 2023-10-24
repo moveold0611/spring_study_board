@@ -29,12 +29,12 @@ public class SignupService {
         switch (uniqueCheck) {
             case 1:
                 Map<String, String> errorMap = new HashMap<>();
-                errorMap.put("message", "email 중복");
+                errorMap.put("email", "email 중복");
                 throw new SignupException(errorMap);
 
             case 2:
                 Map<String, String> errorMap2 = new HashMap<>();
-                errorMap2.put("message", "nickname 중복");
+                errorMap2.put("nickname", "nickname 중복");
                 throw new SignupException(errorMap2);
 
             case 3:

@@ -16,12 +16,6 @@
         <result property="provider" column="provider"/>
     </resultMap>
 
-<!--    <insert id="saveUser" parameterType="com.board.spring_board.entity.User">-->
-<!--        insert into-->
-<!--            user_tb(user_id, email, password, name, nickname, enabled)-->
-<!--        values(0, #{email}, #{password}, #{name}, #{nickname}, 0)-->
-<!--    </insert>-->
-
     <insert id="saveUser" parameterType="com.board.spring_board.entity.User">
         insert into
             user_tb
@@ -63,7 +57,7 @@
             email = #{email}
     </select>
 
-    <select id="checkSignupUnique" parameterType="string" resultType="Integer">
+    <select id="checkSignupUnique" resultType="Integer">
         select
             (select
                 if(count(*) > 0, 1, 0)
@@ -81,10 +75,8 @@
         ) as result
     </select>
 
-
-
 <!--  test   -->
-    <select id="test" parameterType="string" resultType="string">
+    <select id="test" resultType="string">
         select
         case when (
         select
@@ -154,5 +146,15 @@
         where
             oauth2_id = #{oauth2Id}
     </select>
+
+    <update id="updateOauth2AndProvider" parameterType="com.board.spring_board.entity.User">
+        update
+            user_tb
+        set
+            oauth2_id = #{oauth2Id},
+            provider = #{provider}
+        where
+            email = #{email}
+    </update>
 
 </mapper>

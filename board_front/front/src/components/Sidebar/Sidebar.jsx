@@ -8,6 +8,7 @@ import { useQueryClient } from 'react-query';
 const layout = css`
     width: 320px;
     margin-right: 10px;
+    min-height: 400px;
 `;
 
 const container = css`
@@ -60,6 +61,11 @@ function Sidebar(props) {
                 </div>
             </div>
         )}
+        <div>
+            <ul>
+                <Link to={"/board/write"} >글쓰기</Link>
+            </ul>
+        </div>
         </div>
     );
 }

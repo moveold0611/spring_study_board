@@ -5,6 +5,7 @@ import com.board.spring_board.repository.UserMapper;
 import com.board.spring_board.security.JwtTokenProvider;
 import com.board.spring_board.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -20,7 +21,7 @@ import java.net.URLEncoder;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final UserMapper userMapper;
-
+    private final JwtTokenProvider jwtTokenProvider;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
@@ -41,7 +42,15 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     + "&name=" + URLEncoder.encode(name, "UTF-8")
                     + "&profileImg=" + profileImg
                     + "&provider=" + provider);
+            return;
         }
 
-    }
+        PrincipalUser principalUser = new PrincipalUser(user);
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(principalUser, null, principalUser.getAuthorities());
+        String accessToken = jwtTokenProvider.generateAccessToken(authenticationToken);
+
+        response.sendRedirect("http://localhost:3000/auth/oauth2/login"
+                             + "?token=" + accessToken);
+}
 }

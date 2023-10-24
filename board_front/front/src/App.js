@@ -7,7 +7,7 @@ import { connentPrincipal } from './apis/api/principal';
 import AuthRoute from './components/Routes/AuthRoute';
 import BoardRoute from './components/Routes/BoardRoute';
 import AccountRoute from './components/Routes/AccountRoute';
-
+import BoardWrite from "./pages/BoardWrite/BoardWrite"
 
 function App() {
 

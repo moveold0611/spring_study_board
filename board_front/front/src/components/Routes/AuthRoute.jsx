@@ -7,6 +7,7 @@ import { useQueryClient } from 'react-query';
 
 import SignupOauth2 from '../../pages/Signup/SignupOauth2';
 import SignupOauth2Merge from '../../pages/Signup/SignupOauth2Merge';
+import SigninOauth2 from '../../pages/Signin/SigninOauth2';
 
 
 function AuthRoute(props) {
@@ -23,6 +24,7 @@ function AuthRoute(props) {
             <Route path='signup' element={<Signup />}/>
             <Route path='signup/oauth2' element={<SignupOauth2 />}/>
             <Route path='signup/oauth2/merge' element={<SignupOauth2Merge/>}/>
+            <Route path='oauth2/login' element={<SigninOauth2/>}/>
         </Routes>
     );
 }

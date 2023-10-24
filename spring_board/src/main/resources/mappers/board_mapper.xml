@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.spring_board.repository.BoardMapper">
+    <resultMap id="boardCategoryMap" type="com.board.spring_board.entity.BoardCategory">
+        <id property="boardCategoryId" column="board_category_id"/>
+        <result property="boardCategoryName" column="board_category_name" />
+    </resultMap>
+
+    <resultMap id="boardMap" type="com.board.spring_board.entity.Board">
+        <id property="boardId" column="board_id"/>
+        <result property="boardTitle" column="board_title"/>
+        <result property="boardCategoryId" column="board_category_id"/>
+        <result property="boardContent" column="board_content"/>
+        <result property="email" column="email"/>
+        <result property="createDate" column="create_date"/>
+    </resultMap>
+
+    <select id="getBoardCategories" resultMap="boardCategoryMap">
+        select
+            board_category_id,
+            board_category_name
+        from
+            board_category_tb
+    </select>
+
+    <insert id="addBoard" parameterType="com.board.spring_board.entity.Board">
+        insert into
+            board_tb
+        values(0, #{boardTitle}, #{boardCategoryId}, #{boardContent}, #{email})
+    </insert>
+
+</mapper>

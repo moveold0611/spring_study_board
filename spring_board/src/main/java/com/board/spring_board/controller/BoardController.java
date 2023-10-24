@@ -2,22 +2,21 @@ package com.board.spring_board.controller;
 
 import com.board.spring_board.aop.annotation.ValidAop;
 import com.board.spring_board.dto.RegisterBoardReqDto;
+import com.board.spring_board.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@RequiredArgsConstructor
 public class BoardController {
+    private final BoardService boardService;
 
-    @ValidAop
-    @PostMapping("/board/{category}")
-    public ResponseEntity<?> register(@Valid @PathVariable RegisterBoardReqDto registerBoardReqDto, BindingResult bindingResult) {
-
-        return ResponseEntity.ok(200);
+    @GetMapping("/board/category")
+    public ResponseEntity<?> getCategory() throws Exception{
+        return ResponseEntity.ok().body(boardService.getBoardCategoriesAll());
     }
 }

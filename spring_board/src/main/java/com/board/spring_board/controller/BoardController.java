@@ -1,8 +1,12 @@
 package com.board.spring_board.controller;
 
+import com.board.spring_board.aop.annotation.ArgsAop;
 import com.board.spring_board.aop.annotation.ValidAop;
 import com.board.spring_board.dto.RegisterBoardReqDto;
+import com.board.spring_board.dto.SearchBoardListReqDto;
+import com.board.spring_board.dto.WriteBoardReqDto;
 import com.board.spring_board.service.BoardService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,5 +22,18 @@ public class BoardController {
     @GetMapping("/board/category")
     public ResponseEntity<?> getCategory() throws Exception{
         return ResponseEntity.ok().body(boardService.getBoardCategoriesAll());
+    }
+
+    @ArgsAop
+    @ValidAop
+    @PostMapping("/board/content")
+    public ResponseEntity<?> writeBoard(@Valid @RequestBody WriteBoardReqDto writeBoardReqDto, BindingResult bindingResult) {
+        return ResponseEntity.ok().body(boardService.writeBoardContent(writeBoardReqDto));
+    }
+
+    @GetMapping("/boards/{categoryName}/{page}")
+    public ResponseEntity<?> getBoardList(@PathVariable String categoryName, @PathVariable int page, SearchBoardListReqDto searchBoardListReqDto) {
+        System.out.println(categoryName);
+        return ResponseEntity.ok().body(null);
     }
 }

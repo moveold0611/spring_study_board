@@ -6,17 +6,13 @@ import { useEffect } from 'react';
 import { css } from "@emotion/react";
 import Select from 'react-select';
 import { addBoard, getCategory } from '../../apis/api/board';
+import { useQueryClient } from 'react-query';
 
 const buttonContainer = css`
     display: flex;
     justify-content: flex-end;
-    /* width: 100%; */
     align-items: center;
     margin-top: 5px;
-
-    /* ql-container {
-        min-height: 400px;
-    } */
 `;
 
 const categoryContainer = css`
@@ -39,6 +35,15 @@ function BoardWrite(props) {
     const [ newCategory, setNewCategory ] = useState("");
     const [ selectOptions, setSelectOptions ] = useState({});
     const [ selectedOption, setSelectedOption ] = useState();
+    const queryClient = useQueryClient();
+
+
+    const [ content, setContent ] = useState({
+        title: "",
+        content: "",
+        categoryId: 0,
+        categoryName: ""
+    });
 
 
     useEffect(()=> {
@@ -46,11 +51,25 @@ function BoardWrite(props) {
         .then((response) => {
             setSelectOptions(
                 response.data.map(category => {return {
-                    value: category.boardCategoryName,
+                    value: category.boardCategoryId,
                     label: category.boardCategoryName
                 }})
             )
         })
+
+        const principal = queryClient.getQueryState("getPrincipal");
+        console.log(principal)
+        if(!principal.data) {
+            alert("로그인 후 게시글을 작성하세요.");
+            window.location.replace("/");
+            return;
+        }
+
+        if(!principal?.data?.data.enabled) {
+            alert("사용자 인증 후 게시글을 작성할 수 있습니다.")
+            window.location.replace("/")
+            return;
+        }
     }, [])
 
     useEffect(() => {
@@ -59,12 +78,13 @@ function BoardWrite(props) {
         }
     }, [selectOptions]);
 
-    const [ content, setContent ] = useState({
-        email: "",
-        contentId: "",
-        content: "",
-        contentImg: ""
-    });
+    useEffect(() => {
+        setContent({
+            ...content,
+            categoryId: selectedOption?.value,
+            categoryName: selectedOption?.label
+        })
+    }, [selectedOption])
 
     const modules = {
         toolbar: {
@@ -79,10 +99,10 @@ function BoardWrite(props) {
 
     useEffect(() => {
         if(!!newCategory) {        
-            const newOption = {value: newCategory, label: newCategory}
+            const newOption = {value: 0, label: newCategory}
             setSelectedOption(newOption)
 
-            if(!selectOptions.map(option => option.value).includes(newOption.value)) {
+            if(!selectOptions.map(option => option.label).includes(newOption.label)) {
                 setSelectOptions([
                     ...selectOptions,
                     newOption
@@ -92,11 +112,17 @@ function BoardWrite(props) {
     }, [newCategory]);
 
     const handleTitleChange = (e) => {
-        console.log("change test")
+        setContent({
+            ...content,
+            title: e.target.value
+        })
     }
 
-    const handleContentInput = (e) => {
-        setContent(e);
+    const handleContentInput = (value) => {
+        setContent({
+            ...content,
+            content: value
+        });
     }
 
     const handleSelectChange = (option) => {
@@ -111,9 +137,11 @@ function BoardWrite(props) {
         setNewCategory(categoryName);
     }
 
-    const handleBoardSubmit = async () => {
+    const handleWriteSubmit = async () => {
         try {
-            const response = await addBoard();
+            console.log(content)
+            const response = await addBoard(content);
+            console.log(response)
         } catch (error) {
             console.log(error.response.data);
         }
@@ -134,7 +162,7 @@ function BoardWrite(props) {
                     <ReactQuill onChange={handleContentInput} style={{maxWidth: "928px", heigth: "500px"}} modules={modules}/>
                 </div>
                 <div>
-                    <button onClick={handleBoardSubmit} css={buttonContainer}>작성하기</button>
+                    <button onClick={handleWriteSubmit} css={buttonContainer}>작성하기</button>
                 </div>
             </div>
         </RootContainer>

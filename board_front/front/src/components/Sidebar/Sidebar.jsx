@@ -4,6 +4,9 @@ import { css } from "@emotion/react";
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { getCategory } from '../../apis/api/board';
 
 const layout = css`
     width: 320px;
@@ -25,6 +28,14 @@ function Sidebar(props) {
     const queryClient = useQueryClient();
     const principal = queryClient.getQueryData("getPrincipal");
     const principalStatue = queryClient.getQueryState("getPrincipal");
+    const [ categories, setCategories ] = useState([]);
+
+    useEffect(() => {
+        getCategory()
+        .then((response) => {
+            setCategories(response.data)
+        })
+    }, [])
 
     const handleSigninClick = () => {
         navigate("/auth/signin")
@@ -60,12 +71,21 @@ function Sidebar(props) {
                     <Link to={"/auth/signup"}>회원가입</Link>
                 </div>
             </div>
-        )}
-        <div>
-            <ul>
-                <Link to={"/board/write"} >글쓰기</Link>
-            </ul>
-        </div>
+            )}
+            <div>
+                <ul>
+                    <Link to={"/board/all/1"}><li>전체 게시글({categories.map(category => category.boardCount).reduce((sum, curValue) => sum + curValue, 0)})</li></Link>
+                    <Link to={"/board/write"}>글쓰기</Link>
+                    {categories.map(category => {
+                            return <Link key={category.boardCategoryId} to={`/board/${category.boardCategoryName}/1`}>
+                                    <li>
+                                        {category.boardCategoryName} ({category.boardCount})
+                                    </li>
+                                </Link>;
+                    })}
+
+                </ul>                
+            </div>
         </div>
     );
 }

@@ -5,8 +5,9 @@
 
 <mapper namespace="com.board.spring_board.repository.BoardMapper">
     <resultMap id="boardCategoryMap" type="com.board.spring_board.entity.BoardCategory">
-        <id property="boardCategoryId" column="board_category_id"/>
-        <result property="boardCategoryName" column="board_category_name" />
+        <id property="boardCategoryId" column="bct.board_category_id"/>
+        <result property="boardCategoryName" column="bct.board_category_name" />
+        <result property="boardCount" column="count"/>
     </resultMap>
 
     <resultMap id="boardMap" type="com.board.spring_board.entity.Board">
@@ -19,17 +20,31 @@
     </resultMap>
 
     <select id="getBoardCategories" resultMap="boardCategoryMap">
-        select
-            board_category_id,
-            board_category_name
-        from
-            board_category_tb
+        SELECT
+            bct.board_category_id,
+            bct.board_category_name,
+            count(bt.board_category_id)
+        FROM
+            board.board_category_tb bct
+            left outer join board_tb bt on(bt.board_category_id = bct.board_category_id)
+        group by
+            bct.board_category_id,
+            bct.board_category_name;
     </select>
 
-    <insert id="addBoard" parameterType="com.board.spring_board.entity.Board">
+    <insert id="saveBoardContent" parameterType="com.board.spring_board.entity.Board">
         insert into
             board_tb
-        values(0, #{boardTitle}, #{boardCategoryId}, #{boardContent}, #{email})
+        values (0, #{boardTitle}, #{boardCategoryId}, #{boardContent}, #{email}, now())
+    </insert>
+
+    <insert id="saveCategory"
+            parameterType="com.board.spring_board.entity.BoardCategory"
+            useGeneratedKeys="true"
+            keyProperty="boardCategoryId">
+        insert into
+            board_category_tb
+        values (0, #{boardCategoryName})
     </insert>
 
 </mapper>

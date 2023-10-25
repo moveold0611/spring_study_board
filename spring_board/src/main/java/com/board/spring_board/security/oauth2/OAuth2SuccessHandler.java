@@ -28,7 +28,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String oauth2Id = authentication.getName();
         User user = userMapper.findUserByOauth2Id(oauth2Id);
 
-
         // 회원가입이 안되었을 때 OAuth2 계정 회원가입 페이지로 이동
         if(user == null) {
             DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
@@ -52,5 +51,5 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.sendRedirect("http://localhost:3000/auth/oauth2/login"
                              + "?token=" + accessToken);
-}
+    }
 }

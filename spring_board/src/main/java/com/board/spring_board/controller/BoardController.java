@@ -2,6 +2,7 @@ package com.board.spring_board.controller;
 
 import com.board.spring_board.aop.annotation.ArgsAop;
 import com.board.spring_board.aop.annotation.ValidAop;
+import com.board.spring_board.dto.BoardListRespDto;
 import com.board.spring_board.dto.RegisterBoardReqDto;
 import com.board.spring_board.dto.SearchBoardListReqDto;
 import com.board.spring_board.dto.WriteBoardReqDto;
@@ -24,7 +25,7 @@ public class BoardController {
         return ResponseEntity.ok().body(boardService.getBoardCategoriesAll());
     }
 
-    @ArgsAop
+
     @ValidAop
     @PostMapping("/board/content")
     public ResponseEntity<?> writeBoard(@Valid @RequestBody WriteBoardReqDto writeBoardReqDto, BindingResult bindingResult) {
@@ -33,7 +34,7 @@ public class BoardController {
 
     @GetMapping("/boards/{categoryName}/{page}")
     public ResponseEntity<?> getBoardList(@PathVariable String categoryName, @PathVariable int page, SearchBoardListReqDto searchBoardListReqDto) {
-        System.out.println(categoryName);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(boardService.getBoardList(categoryName, page, searchBoardListReqDto));
     }
+
 }

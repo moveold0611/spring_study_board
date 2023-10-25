@@ -1,6 +1,8 @@
 package com.board.spring_board.service;
 
 import com.board.spring_board.dto.BoardCategoryRespDto;
+import com.board.spring_board.dto.BoardListRespDto;
+import com.board.spring_board.dto.SearchBoardListReqDto;
 import com.board.spring_board.dto.WriteBoardReqDto;
 import com.board.spring_board.entity.Board;
 import com.board.spring_board.entity.BoardCategory;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -47,4 +51,18 @@ public class BoardService {
         return boardMapper.saveBoardContent(board) > 0;
     }
 
+    public List<BoardListRespDto> getBoardList(String categoryName, int page, SearchBoardListReqDto searchBoardListReqDto) {
+        int index = (page - 1) * 10;
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("index", index);
+        paramsMap.put("categoryName", categoryName);
+        paramsMap.put("optionName", searchBoardListReqDto.getOptionName());
+        paramsMap.put("searchValue", searchBoardListReqDto.getSearchValue());
+
+        List<BoardListRespDto> boardListRespDto = new ArrayList<>();
+        boardMapper.getBoardList(paramsMap).forEach(board -> {
+            boardListRespDto.add(board.toBoardListDto());
+        });
+        return boardListRespDto;
+    }
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SearchBoardListReqDto {
-    private String categoryName;
+    private String OptionName;
     private String searchValue;
 }

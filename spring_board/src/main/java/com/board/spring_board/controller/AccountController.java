@@ -26,7 +26,6 @@ public class AccountController {
 
     @GetMapping("/account/principal")
     public ResponseEntity<?> getPrincipal() {
-        System.out.println("Account Controller 진입");
         PrincipalUser principalUser
                 = (PrincipalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

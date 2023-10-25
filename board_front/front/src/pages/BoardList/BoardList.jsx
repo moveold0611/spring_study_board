@@ -100,24 +100,27 @@ function BoardList(props) {
 
                 <table css={table}>
                     <thead>
-                        <td>
+                        <tr>
                             <th>번호</th>
                             <th>제목</th>
                             <th>작성자</th>
                             <th>작성일</th>
                             <th>추천</th>
                             <th>회수</th>
-                        </td>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>번호</td>
-                            <td>제목</td>
-                            <td>작성자</td>
-                            <td>작성일</td>
-                            <td>추천</td>
-                            <td>조회수</td>
-                        </tr>
+                        {!getBoardList.isLoading && getBoardList?.data?.data.map(board => {
+                            return  <tr key={board.boardId}>
+                                        <td>{board.boardId}</td>
+                                        <td>{board.title}</td>
+                                        <td>{board.nickname}</td>
+                                        <td>{board.createDate}</td>
+                                        <td>{board.hitsCount}</td>
+                                        <td>{board.likeCount}</td>
+                                    </tr>
+                        })}
+                        
                     </tbody>
                 </table>
 

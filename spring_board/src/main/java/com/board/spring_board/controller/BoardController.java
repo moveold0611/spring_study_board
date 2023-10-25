@@ -25,7 +25,6 @@ public class BoardController {
         return ResponseEntity.ok().body(boardService.getBoardCategoriesAll());
     }
 
-
     @ValidAop
     @PostMapping("/board/content")
     public ResponseEntity<?> writeBoard(@Valid @RequestBody WriteBoardReqDto writeBoardReqDto, BindingResult bindingResult) {

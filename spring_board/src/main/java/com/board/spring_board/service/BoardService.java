@@ -24,7 +24,6 @@ import java.util.Map;
 public class BoardService {
     private final BoardMapper boardMapper;
 
-
     public List<BoardCategoryRespDto> getBoardCategoriesAll() {
         List<BoardCategoryRespDto> boardCategoryRespDtos = new ArrayList<>();
         boardMapper.getBoardCategories().forEach(category -> {
@@ -47,7 +46,6 @@ public class BoardService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Board board = writeBoardReqDto.toBoardEntity(email);
 
-        System.out.println("test " + writeBoardReqDto);
         return boardMapper.saveBoardContent(board) > 0;
     }
 

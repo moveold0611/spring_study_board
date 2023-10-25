@@ -64,7 +64,6 @@ const SPageNumbers = css`
 
 function BoardList(props) {
     const { category, page } = useParams();
-    console.log(category)
 
     const options = [
         {value: "전체", label: "전체"},
@@ -93,7 +92,6 @@ function BoardList(props) {
                         <ReactSelect options={options} defaultValue={options[0]} />
                     </div>
 
-
                     <input type='text'/>
                     <button>검색</button>
                 </div>
@@ -106,7 +104,7 @@ function BoardList(props) {
                             <th>작성자</th>
                             <th>작성일</th>
                             <th>추천</th>
-                            <th>회수</th>
+                            <th>조회수</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -120,7 +118,6 @@ function BoardList(props) {
                                         <td>{board.likeCount}</td>
                                     </tr>
                         })}
-                        
                     </tbody>
                 </table>
 
@@ -129,7 +126,7 @@ function BoardList(props) {
                     <Link to={`/board/${category}/${1}`}><li>1</li></Link>
                     <Link to={`/board/${category}/${2}`}><li>2</li></Link>
                     <Link to={`/board/${category}/${3}`}><li>3</li></Link>
-                    <Link to={`/board/${category}/${4}`}><li>4</li></Link>
+                    <Link to={`/board/${category}/${4}`}><li>4</li></Link>  
                     <Link to={`/board/${category}/${5}`}><li>5</li></Link>
                     <Link to={`/board/${category}/${ parseInt(page) + 1}`}>&#62;</Link>
                 </ul>

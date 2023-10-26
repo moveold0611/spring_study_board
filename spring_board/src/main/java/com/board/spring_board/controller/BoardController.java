@@ -19,21 +19,22 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
-
     @GetMapping("/board/category")
     public ResponseEntity<?> getCategory() throws Exception{
         return ResponseEntity.ok().body(boardService.getBoardCategoriesAll());
     }
-
     @ValidAop
     @PostMapping("/board/content")
     public ResponseEntity<?> writeBoard(@Valid @RequestBody WriteBoardReqDto writeBoardReqDto, BindingResult bindingResult) {
         return ResponseEntity.ok().body(boardService.writeBoardContent(writeBoardReqDto));
     }
-
     @GetMapping("/boards/{categoryName}/{page}")
     public ResponseEntity<?> getBoardList(@PathVariable String categoryName, @PathVariable int page, SearchBoardListReqDto searchBoardListReqDto) {
         return ResponseEntity.ok().body(boardService.getBoardList(categoryName, page, searchBoardListReqDto));
+    }
+    @GetMapping("/board/{categoryName}/all")
+    public ResponseEntity<?> getBoardCount(@PathVariable String categoryName, SearchBoardListReqDto searchBoardListReqDto) {
+        return ResponseEntity.ok().body(boardService.getBoardCount(categoryName, searchBoardListReqDto));
     }
 
 }

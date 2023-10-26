@@ -14,3 +14,8 @@ export const getBoards = async (category, page, option) => {
     const response = await instance.get(`boards/${category}/${page}`, option);
     return response;
 }
+
+export const getBoardCount = async (categoryName, option) => {
+    const response = await instance.get(`/board/${categoryName}/all`, option);
+    return response.data;
+}

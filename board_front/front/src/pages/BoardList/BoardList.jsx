@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
-import React from 'react';
-import { useLocation, useParams } from 'react-router';
+import React, { useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import RootContainer from '../../components/RootContainer/RootContainer';
 import ReactSelect from 'react-select';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getBoards } from '../../apis/api/board';
+import { getBoardCount, getBoards } from '../../apis/api/board';
 import { useQuery } from 'react-query';
 /** @jsxImportSource @emotion/react */
 
@@ -25,6 +25,8 @@ const table = css`
     }
 `
 
+
+
 const searchContainer = css`
     display: flex;
     justify-content: flex-end;
@@ -36,9 +38,13 @@ const searchContainer = css`
     }
 `;
 
+
+
 const selectBox = css`
     width: 100px;
 `;
+
+
 
 const SPageNumbers = css`
     display: flex;
@@ -46,24 +52,24 @@ const SPageNumbers = css`
     align-items: center;
     margin-top: 10px;
     width: 300px;
-    list-style-type: none;
 
-    & a {
-        text-decoration: none;
-        color: black
-    }
-
-    & li {
+    & button {
         display: flex;
         justify-content: center;
         align-items: center;
+        margin: 0px 3px;
         width: 20px;
         border: 1px solid #dbdbdb;
+        cursor: pointer;
     }
 `;
 
+
+// ============================================================================================================
+
 function BoardList(props) {
-    const { category, page } = useParams();
+
+// ================ 변수, 상태 ========================
 
     const options = [
         {value: "전체", label: "전체"},
@@ -71,17 +77,114 @@ function BoardList(props) {
         {value: "작성자", label: "작성자"}
     ];
 
-    
+    const defaultSearchParams = {
+        optionName : options[0].label,
+        searchValue: "",
+    }
+
+    const navigate = useNavigate();
+    const { category, page } = useParams();
+    const [ searchParams, setSearchParams ] = useState(defaultSearchParams);
+
+
+// ===================== 랜더링 =================
 
     const getBoardList = useQuery(["getBoardList", page, category], async () => {
-        const option = {
+        const option = {    
             params: {
-                optionName: "",
-                searchValue: ""
+                optionName: searchParams.optionName,
+                searchValue: searchParams.searchValue
         }}
         return await getBoards(category, page, option);
+    }, {
+        refetchOnWindowFocus: false
     })
 
+    const getBoardCountQuery = useQuery(["getBoardCount", page, category], async () => {
+        const option = {    
+            params: {
+                optionName: searchParams.optionName,
+                searchValue: searchParams.searchValue
+        }}
+        return await getBoardCount(category, option);       
+    }, {
+        refetchOnWindowFocus: false
+    });
+
+
+// ==================== 핸들, 함수 =========================
+
+    const handleSearchOptionChange = (options) => {
+        console.log(options)
+        setSearchParams({
+            ...searchParams,
+            optionName: options.label
+        })
+    }
+
+
+    const handleSearchChange = (e) => {
+        setSearchParams({
+            ...searchParams,
+            searchValue: e.target.value
+        })
+    }
+
+
+    const handleSearchClick = () => {
+        console.log(searchParams)
+        navigate(`/board/${category}/1`);
+        getBoardList.refetch();
+        getBoardCountQuery.refetch();
+    }
+
+
+    const handlePageChangeByNum = (category, num) => {
+        navigate(`/board/${category}/${num}`);
+    }
+    const handlePageChangeByArrowMinus = (category, page) => {
+        navigate(`/board/${category}/${parseInt(page) - 1}`);
+    }
+    const handlePageChangeByArrowPlus = (category, page) => {
+        navigate(`/board/${category}/${parseInt(page) + 1}`);
+    }
+
+    const pagination = () => {
+        if(getBoardCount.isLoading) {
+            return <></>
+        }
+
+        const totalBoardCount = getBoardCountQuery.data;
+
+        const lastPage = totalBoardCount % 10 === 0
+            ? totalBoardCount / 10 : Math.floor(totalBoardCount / 10) + 1;
+
+        const startIndex = parseInt(page) % 5 === 0
+            ? parseInt(page) - 4 : parseInt(page) - (parseInt(page) % 5) + 1;
+
+        const endIndex = startIndex + 4 <= lastPage 
+            ? startIndex + 4 : lastPage;
+
+        const pageNumbers = [];
+        for(let i = startIndex; i <= endIndex; i++) {
+            pageNumbers.push(i);
+        }
+
+        return (
+            <>
+                <button disabled={parseInt(page) === 1} onClick={() => handlePageChangeByArrowMinus(category, page)}>&#60;</button>
+
+                {pageNumbers.map(num => {
+                    return <button onClick={()=>handlePageChangeByNum(category, num)} key={num}>{num}</button>
+                })}
+
+                <button disabled={parseInt(page) === lastPage} onClick={() => handlePageChangeByArrowPlus(category, page)}>&#62;</button>
+            </>
+        )
+    }
+
+
+// ====================================================================================
     return (
         <RootContainer>
             <div>
@@ -89,11 +192,13 @@ function BoardList(props) {
 
                 <div css={searchContainer}>
                     <div css={selectBox}>
-                        <ReactSelect options={options} defaultValue={options[0]} />
+                        <ReactSelect onChange={handleSearchOptionChange}
+                        options={options}
+                        defaultValue={options[0]}/>
                     </div>
-
-                    <input type='text'/>
-                    <button>검색</button>
+                    <input onChange={handleSearchChange}
+                            type='text'/>
+                    <button onClick={handleSearchClick}>검색</button>
                 </div>
 
                 <table css={table}>
@@ -122,13 +227,7 @@ function BoardList(props) {
                 </table>
 
                 <ul css={SPageNumbers}>
-                    <Link to={`/board/${category}/${ parseInt(page) - 1}`}>&#60;</Link>
-                    <Link to={`/board/${category}/${1}`}><li>1</li></Link>
-                    <Link to={`/board/${category}/${2}`}><li>2</li></Link>
-                    <Link to={`/board/${category}/${3}`}><li>3</li></Link>
-                    <Link to={`/board/${category}/${4}`}><li>4</li></Link>  
-                    <Link to={`/board/${category}/${5}`}><li>5</li></Link>
-                    <Link to={`/board/${category}/${ parseInt(page) + 1}`}>&#62;</Link>
+                        {pagination()}
                 </ul>
             </div>
         </RootContainer>

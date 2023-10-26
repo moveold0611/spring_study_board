@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import RootContainer from '../../components/RootContainer/RootContainer';
@@ -8,6 +7,7 @@ import { useEffect } from 'react';
 import { getBoardCount, getBoards } from '../../apis/api/board';
 import { useQuery } from 'react-query';
 /** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
 const table = css`
     width: 100%;
@@ -65,11 +65,19 @@ const SPageNumbers = css`
 `;
 
 
+const SBoardTitle = css`
+    width: 500px;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis; // 텍스트 넘어갈 시 ...처리
+    white-space: nowrap; // 줄바꿈 금지
+`;
+
 // ============================================================================================================
 
 function BoardList(props) {
 
-// ================ 변수, 상태 ========================
+// =================== 변수, 상태 ========================
 
     const options = [
         {value: "전체", label: "전체"},
@@ -87,7 +95,7 @@ function BoardList(props) {
     const [ searchParams, setSearchParams ] = useState(defaultSearchParams);
 
 
-// ===================== 랜더링 =================
+// ===================== 랜더링 ===================
 
     const getBoardList = useQuery(["getBoardList", page, category], async () => {
         const option = {    
@@ -184,6 +192,10 @@ function BoardList(props) {
     }
 
 
+    const handleNavigateBoardDetails = (boardId) => {
+        navigate(`/board/details/${boardId}`)
+    }
+
 // ====================================================================================
     return (
         <RootContainer>
@@ -214,13 +226,14 @@ function BoardList(props) {
                     </thead>
                     <tbody>
                         {!getBoardList.isLoading && getBoardList?.data?.data.map(board => {
-                            return  <tr key={board.boardId}>
+                            return  <tr onClick={() => {handleNavigateBoardDetails(board.boardId)}}
+                                        key={board.boardId}>
                                         <td>{board.boardId}</td>
-                                        <td>{board.title}</td>
+                                        <td css={SBoardTitle}>{board.title}</td>
                                         <td>{board.nickname}</td>
                                         <td>{board.createDate}</td>
-                                        <td>{board.hitsCount}</td>
                                         <td>{board.likeCount}</td>
+                                        <td>{board.hitsCount}</td>
                                     </tr>
                         })}
                     </tbody>

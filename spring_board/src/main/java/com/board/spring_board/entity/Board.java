@@ -1,5 +1,6 @@
 package com.board.spring_board.entity;
 
+import com.board.spring_board.dto.BoardDetailsRespDto;
 import com.board.spring_board.dto.BoardListRespDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 @Builder
 @Data
@@ -25,8 +27,6 @@ public class Board {
     private int boardLikeCount;
 
     public BoardListRespDto toBoardListDto() {
-
-
         return BoardListRespDto.builder()
                 .boardId(boardId)
                 .title(boardTitle)
@@ -34,6 +34,20 @@ public class Board {
                 .createDate(createDate.format(DateTimeFormatter.ISO_DATE))
                 .hitsCount(boardHitsCount)
                 .likeCount(boardLikeCount)
+                .build();
+    }
+
+    public BoardDetailsRespDto toBoardDetailsDto() {
+        return BoardDetailsRespDto.builder()
+                .boardId(boardId)
+                .boardTitle(boardTitle)
+                .nickname(nickname)
+                .email(email)
+                .boardContent(boardContent)
+                .boardCategoryId(boardCategoryId)
+                .createDate(createDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)))
+                .boardHitsCount(boardHitsCount)
+                .boardLikeCount(boardLikeCount)
                 .build();
     }
 }

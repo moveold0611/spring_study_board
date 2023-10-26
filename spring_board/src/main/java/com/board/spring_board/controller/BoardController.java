@@ -1,13 +1,8 @@
 package com.board.spring_board.controller;
 
-import com.board.spring_board.aop.annotation.ArgsAop;
 import com.board.spring_board.aop.annotation.ValidAop;
-import com.board.spring_board.dto.BoardListRespDto;
-import com.board.spring_board.dto.RegisterBoardReqDto;
-import com.board.spring_board.dto.SearchBoardListReqDto;
-import com.board.spring_board.dto.WriteBoardReqDto;
+import com.board.spring_board.dto.*;
 import com.board.spring_board.service.BoardService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -36,5 +31,24 @@ public class BoardController {
     public ResponseEntity<?> getBoardCount(@PathVariable String categoryName, SearchBoardListReqDto searchBoardListReqDto) {
         return ResponseEntity.ok().body(boardService.getBoardCount(categoryName, searchBoardListReqDto));
     }
+    @GetMapping("/board/details/{boardId}")
+    public ResponseEntity<?> getBoardDetails(@PathVariable int boardId) {
+        System.out.println(boardService.getBoardDetails(boardId));
+        return ResponseEntity.ok().body(boardService.getBoardDetails(boardId));
+    }
+    @GetMapping("/board/like/{boardId}")
+    public ResponseEntity<?> getBoardLikeState(@PathVariable int boardId) {
+        System.out.println(boardId);
+        return ResponseEntity.ok().body(boardService.getBoardLikeState(boardId));
+    }
 
+    @PostMapping("/board/like/set/{boardId}")
+    public ResponseEntity<?> addBoardLike(@PathVariable int boardId ) {
+        return ResponseEntity.ok().body(boardService.setBoardLike(boardId));
+    }
+
+    @DeleteMapping("/board/like/del/{boardId}")
+    public ResponseEntity<?> cancelBoardLike(@PathVariable int boardId) {
+        return ResponseEntity.ok().body(boardService.cancelBoardLike(boardId));
+    }
 }

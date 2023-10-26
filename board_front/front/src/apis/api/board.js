@@ -19,3 +19,23 @@ export const getBoardCount = async (categoryName, option) => {
     const response = await instance.get(`/board/${categoryName}/all`, option);
     return response.data;
 }
+
+export const getBoardDetails = async (boardId) => {
+    const response = await instance.get(`/board/details/${boardId}`);
+    return response;
+}
+
+export const getLikeStateReq = async (boardId) => {
+    const response = await instance.get(`/board/like/${boardId}`);
+    return response;
+}
+
+export const insertBoardLike = async (boardId) => {
+    const response = await instance.post(`/board/like/set/${boardId}`)
+    return response;
+}
+
+export const deleteBoardLike = async (boardId) => {
+    const response = await instance.delete(`/board/like/del/${boardId}`);
+    return response;
+}

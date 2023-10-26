@@ -1,15 +1,11 @@
 package com.board.spring_board.service;
 
-import com.board.spring_board.dto.BoardCategoryRespDto;
-import com.board.spring_board.dto.BoardListRespDto;
-import com.board.spring_board.dto.SearchBoardListReqDto;
-import com.board.spring_board.dto.WriteBoardReqDto;
+import com.board.spring_board.dto.*;
 import com.board.spring_board.entity.Board;
 import com.board.spring_board.entity.BoardCategory;
 import com.board.spring_board.repository.BoardMapper;
 import com.board.spring_board.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,5 +67,56 @@ public class BoardService {
         paramsMap.put("searchValue", searchBoardListReqDto.getSearchValue());
 
         return boardMapper.getBoardCount(paramsMap);
+    }
+    public BoardDetailsRespDto getBoardDetails(int boardId) {
+        return boardMapper.getBoardDetails(boardId).toBoardDetailsDto();
+    }
+    public boolean getBoardLikeState(int boardId) {
+        Map<String, Object> paramsMap = new HashMap<>();
+        PrincipalUser principalUser =
+                (PrincipalUser) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+        String email = principalUser.getUsername();
+        System.out.println(boardId);
+        System.out.println(email);
+        paramsMap.put("boardId", boardId);
+        paramsMap.put("email", email);
+
+        System.out.println("test " + boardMapper.getBoardLikeState(paramsMap));
+        return boardMapper.getBoardLikeState(paramsMap) > 0;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setBoardLike(int boardId) {
+        Map<String, Object> paramsMap = new HashMap<>();
+        PrincipalUser principalUser =
+                (PrincipalUser) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+        String email = principalUser.getUsername();
+        paramsMap.put("boardId", boardId);
+        paramsMap.put("email", email);
+        System.out.println("set");
+
+        return boardMapper.insertBoardLike(paramsMap) > 0;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean cancelBoardLike(int boardId) {
+        Map<String, Object> paramsMap = new HashMap<>();
+        PrincipalUser principalUser =
+                (PrincipalUser) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+        String email = principalUser.getUsername();
+        paramsMap.put("boardId", boardId);
+        paramsMap.put("email", email);
+        System.out.println("del");
+
+        return boardMapper.deleteBoardLike(paramsMap) > 0;
     }
 }

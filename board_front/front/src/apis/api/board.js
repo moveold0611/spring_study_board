@@ -5,6 +5,16 @@ export const addBoard = async (content) => {
     return response;
 }
 
+export const updateBoard = async (content) => {
+    const response = await instance.put(`/board/content/update`, content);
+    return response;
+}
+
+export const removeBoard = async (removeData) => {
+    const response = await instance.delete(`/board/content/delete/${removeData}`);
+    return response;
+}
+
 export const getCategory = async () => {
     const response = await instance.get("/board/category");
     return response;

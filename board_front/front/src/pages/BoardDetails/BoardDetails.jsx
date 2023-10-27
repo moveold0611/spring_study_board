@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import RootContainer from '../../components/RootContainer/RootContainer';
-import { deleteBoardLike, getBoardDetails, getLikeStateReq, insertBoardLike } from '../../apis/api/board';
+import { deleteBoardLike, getBoardDetails, getLikeStateReq, insertBoardLike, removeBoard, updateBoard } from '../../apis/api/board';
 import { useQuery, useQueryClient } from 'react-query';
-import { useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
@@ -26,10 +26,7 @@ const contentContainer = css`
     }
 `;
 
-const SBoardTitle = css`
-    width: 100%;
-    font-size: 40px;
-`;
+
 
 const SSideOption = css`
     position: absolute;
@@ -48,7 +45,25 @@ const SLikeButton = (isLike) => css`
     cursor: pointer;
 `;
 
+const SBoardTitleContainer = css`    
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+`
+
+const SBoardTitle = css`
+    width: 50%;
+    font-size: 40px;
+`;
+
+const STitleButton = css`
+    height: 100px;
+    width: 70px;
+    
+`
+
 function BoardDetails(props) {
+    const navigate = useNavigate();
     const { boardId } = useParams();
     const [ board, setBoard ] = useState();
     const queryClient = useQueryClient();
@@ -98,6 +113,25 @@ function BoardDetails(props) {
         }
     }
 
+    const handleUpdateSubmit = async (board) => {
+        const boardId = board.boardId;
+        navigate(`/board/update/${boardId}`)
+        // await updateBoard();
+    }
+    const handleDeleteSubmit = async (board) => {
+        if(!!window.confirm("정말로 삭제하시겠습니까?")) {
+            try {
+                await removeBoard(board.boardId);
+                alert("게시글이 삭제되었습니다.")
+                window.location.replace("/board/all/1")
+            } catch (error) {
+                console.log(error.response.data)
+            }
+        }else {
+            return;
+        }
+    }
+
     return (
         <RootContainer>
             <div css={boardContainer}>
@@ -111,8 +145,13 @@ function BoardDetails(props) {
                         </button>
                     }
                 </div>
+                <div css={SBoardTitleContainer}>
                 <h1 css={SBoardTitle}>{board.boardTitle}</h1>
-                <p><b>{board.nickname} - {board.createDate}</b></p>
+                    <p><b>{board.nickname} - {board.createDate}</b></p>                
+                    {board.email == principal?.data?.data?.email ? <>
+                    <button onClick={() => handleUpdateSubmit(board)} css={STitleButton}>수정</button>
+                    <button onClick={() => handleDeleteSubmit(board)} css={STitleButton}>삭제</button></> : <></>}
+                </div>
                 <div css={line}/>
                 <div css={contentContainer} dangerouslySetInnerHTML={{__html: board.boardContent}} /> 
             </div>

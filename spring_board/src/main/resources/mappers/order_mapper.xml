@@ -10,4 +10,10 @@
             order_tb
         values(0, #{productId}, #{email}, now())
     </insert>
+
+    <insert id="pointUse" parameterType="com.board.spring_board.entity.Point">
+        insert into
+            point_history_tb
+        values(0, 0, #{pointHistoryPrice}, #{email}, now())
+    </insert>
 </mapper>

@@ -41,6 +41,24 @@
         values (0, #{boardTitle}, #{boardCategoryId}, #{boardContent}, #{email}, now())
     </insert>
 
+    <update id="updateBoardContent" parameterType="com.board.spring_board.entity.Board">
+        update
+            board_tb
+        set
+            board_title = #{boardTitle},
+            board_content = #{boardContent},
+            board_category_id = #{boardCategoryId}
+        where
+            board_id = #{boardId}
+    </update>
+
+    <delete id="deleteBoardContent" parameterType="Integer">
+        delete from
+            board_tb
+        where
+            board_id = #{boardId}
+    </delete>
+
     <insert id="saveCategory"
             parameterType="com.board.spring_board.entity.BoardCategory"
             useGeneratedKeys="true"

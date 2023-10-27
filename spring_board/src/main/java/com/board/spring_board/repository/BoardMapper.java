@@ -13,6 +13,8 @@ import java.util.Map;
 public interface BoardMapper {
     public List<BoardCategory> getBoardCategories();
     public Integer saveBoardContent(Board board);
+    public Integer updateBoardContent(Board board);
+    public Integer deleteBoardContent(int boardId);
     public Integer saveCategory(BoardCategory boardCategory);
     public List<Board> getBoardList(Map<String, Object> paramsMap);
     public Integer getBoardCount(Map<String, Object> paramsMap);

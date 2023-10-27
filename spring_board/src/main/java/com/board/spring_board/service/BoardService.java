@@ -44,7 +44,19 @@ public class BoardService {
 
         return boardMapper.saveBoardContent(board) > 0;
     }
-
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateBoardContent(UpdateBoardReqDto updateBoardReqDto) {
+        Board board = updateBoardReqDto.toEntity();
+        return boardMapper.updateBoardContent(board) > 0;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteBoardContent(int boardId) {
+//        String contentEmail = boardMapper.getBoardDetails(deleteBoardReqDto.getBoardId()).getEmail();
+//        if(deleteBoardReqDto.getEmail() != contentEmail) {
+//            return false;
+//        }
+        return boardMapper.deleteBoardContent(boardId) > 0;
+    }
     public List<BoardListRespDto> getBoardList(String categoryName, int page, SearchBoardListReqDto searchBoardListReqDto) {
         int index = (page - 1) * 10;
         Map<String, Object> paramsMap = new HashMap<>();

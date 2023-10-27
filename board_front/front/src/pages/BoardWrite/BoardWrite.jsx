@@ -6,7 +6,9 @@ import { useEffect } from 'react';
 import { css } from "@emotion/react";
 import Select from 'react-select';
 import { addBoard, getCategory } from '../../apis/api/board';
-import { useQueryClient } from 'react-query';
+import {  useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router';
+import { pointUse } from '../../apis/api/point.js';
 
 const buttonContainer = css`
     display: flex;
@@ -32,10 +34,12 @@ const titleInput = css`
 `;
 
 function BoardWrite(props) {
+    const navigate = useNavigate();
     const [ newCategory, setNewCategory ] = useState("");
     const [ selectOptions, setSelectOptions ] = useState({});
     const [ selectedOption, setSelectedOption ] = useState();
     const queryClient = useQueryClient();
+    const principal = queryClient.getQueryState("getPrincipal");
 
 
     const [ content, setContent ] = useState({
@@ -138,14 +142,33 @@ function BoardWrite(props) {
     }
 
     const handleWriteSubmit = async () => {
-        try {
-            console.log(content)
-            const response = await addBoard(content);
-            console.log(response)
-        } catch (error) {
-            console.log(error.response.data);
+        queryClient.refetchQueries(["getPrincipal"]);
+        const point =principal?.data?.data?.userPoint;
+        if(point >= 500) {
+            if(window.confirm("작성 시 포인트가 500 차감됩니다. 작성하시겠습니까?")) {
+                try {
+                    const pointUseData = ({
+                        email: principal?.data?.data?.email,
+                        pointHistoryPrice: 500
+                    });
+                    await addBoard(content);
+                    await pointUse(pointUseData);
+                    window.location.replace("/board/all/1")
+                } catch (error) {
+                    console.log(error.response.data);
+                }
+            }else {
+                return;
+            }
+        }else {
+            if(window.confirm("포인트가 부족합니다. 충전하시겠습니끼?")) {
+                navigate("/store/products")
+            }else {
+                return;
+            }
         }
     }
+
 
     return (
         <RootContainer>

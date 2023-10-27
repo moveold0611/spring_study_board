@@ -7,7 +7,7 @@ import { connentPrincipal } from './apis/api/principal';
 import AuthRoute from './components/Routes/AuthRoute';
 import BoardRoute from './components/Routes/BoardRoute';
 import AccountRoute from './components/Routes/AccountRoute';
-import BoardWrite from "./pages/BoardWrite/BoardWrite"
+import StorePageRoute from './components/Routes/StorePageRoute';
 
 function App() {
 
@@ -37,6 +37,7 @@ function App() {
           <Route path='auth/*' element={<AuthRoute />}/>
           <Route path='board/*' element={<BoardRoute />}/>
           <Route path='account/*' element={<AccountRoute />} />
+          <Route path='store/*' element={<StorePageRoute/>}/>
         </Routes>
       </RootLayout>
     </>

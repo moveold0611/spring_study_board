@@ -46,9 +46,10 @@ public class BoardController {
     public ResponseEntity<?> addBoardLike(@PathVariable int boardId ) {
         return ResponseEntity.ok().body(boardService.setBoardLike(boardId));
     }
-
     @DeleteMapping("/board/like/del/{boardId}")
     public ResponseEntity<?> cancelBoardLike(@PathVariable int boardId) {
         return ResponseEntity.ok().body(boardService.cancelBoardLike(boardId));
     }
+
+
 }

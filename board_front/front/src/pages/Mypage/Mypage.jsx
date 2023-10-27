@@ -61,6 +61,7 @@ function Mypage(props) {
     
     const nickname = principal.nickname;
     const email = principal.email;
+    const userPoint = principal.userPoint;
 
     const handleSendMail = async () => {
         try {
@@ -156,7 +157,7 @@ function Mypage(props) {
                         <button onClick={handleUploadCancel}>취소</button>
                     </div>}
                     <div>
-                        <h3>누적 포인트: 0원</h3>
+                        <h3>누적 포인트: {userPoint} 원</h3>
                         <button onClick={handleBuyPointClick}>포인트 구매</button>
                     </div>
                 </div>

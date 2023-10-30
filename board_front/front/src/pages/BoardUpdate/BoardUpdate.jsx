@@ -105,7 +105,7 @@ function BoardUpdate(props) {
         categoryId: getBoardDetail?.data?.data?.boardCategoryId,
         categoryName: getBoardDetail?.data?.data?.boardCategoryName,
         boardId: parseInt(boardId)
-    });
+    }); 
 
     useEffect(() => {
         setContent({

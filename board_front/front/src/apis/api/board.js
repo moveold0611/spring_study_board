@@ -11,7 +11,7 @@ export const updateBoard = async (content) => {
 }
 
 export const removeBoard = async (removeData) => {
-    const response = await instance.delete(`/board/content/delete/${removeData}`);
+    const response = await instance.delete(`/board/${removeData}`);
     return response;
 }
 

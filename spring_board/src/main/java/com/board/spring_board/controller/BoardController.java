@@ -21,15 +21,13 @@ public class BoardController {
     @ValidAop
     @PostMapping("/board/content")
     public ResponseEntity<?> writeBoard(@Valid @RequestBody WriteBoardReqDto writeBoardReqDto, BindingResult bindingResult) {
-        System.out.println("test1");
         return ResponseEntity.ok().body(boardService.writeBoardContent(writeBoardReqDto));
     }
     @PutMapping("board/content/update")
     public ResponseEntity<?> updateBoard(@RequestBody UpdateBoardReqDto updateBoardReqDto) {
-        System.out.println(1);
         return ResponseEntity.ok().body(boardService.updateBoardContent(updateBoardReqDto));
     }
-    @DeleteMapping("board/content/delete/{boardId}")
+    @DeleteMapping("board/{boardId}")
     public ResponseEntity<?> removeBoard(@PathVariable int boardId) {
         return ResponseEntity.ok().body(boardService.deleteBoardContent(boardId));
     }
@@ -43,12 +41,10 @@ public class BoardController {
     }
     @GetMapping("/board/details/{boardId}")
     public ResponseEntity<?> getBoardDetails(@PathVariable int boardId) {
-        System.out.println(boardService.getBoardDetails(boardId));
         return ResponseEntity.ok().body(boardService.getBoardDetails(boardId));
     }
     @GetMapping("/board/like/{boardId}")
     public ResponseEntity<?> getBoardLikeState(@PathVariable int boardId) {
-        System.out.println(boardId);
         return ResponseEntity.ok().body(boardService.getBoardLikeState(boardId));
     }
 

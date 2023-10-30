@@ -6,6 +6,7 @@ import com.board.spring_board.entity.BoardCategory;
 import com.board.spring_board.repository.BoardMapper;
 import com.board.spring_board.security.PrincipalUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,22 +40,19 @@ public class BoardService {
             writeBoardReqDto.setCategoryId(boardCategory.getBoardCategoryId());
         }
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Board board = writeBoardReqDto.toBoardEntity(email);
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
 
-        return boardMapper.saveBoardContent(board) > 0;
+        return boardMapper.saveBoardContent(writeBoardReqDto.toBoardEntity(email)) > 0;
     }
     @Transactional(rollbackFor = Exception.class)
     public boolean updateBoardContent(UpdateBoardReqDto updateBoardReqDto) {
-        Board board = updateBoardReqDto.toEntity();
-        return boardMapper.updateBoardContent(board) > 0;
+        return boardMapper.updateBoardContent(updateBoardReqDto.toEntity()) > 0;
     }
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteBoardContent(int boardId) {
-//        String contentEmail = boardMapper.getBoardDetails(deleteBoardReqDto.getBoardId()).getEmail();
-//        if(deleteBoardReqDto.getEmail() != contentEmail) {
-//            return false;
-//        }
         return boardMapper.deleteBoardContent(boardId) > 0;
     }
     public List<BoardListRespDto> getBoardList(String categoryName, int page, SearchBoardListReqDto searchBoardListReqDto) {
@@ -91,12 +89,9 @@ public class BoardService {
                         .getAuthentication()
                         .getPrincipal();
         String email = principalUser.getUsername();
-        System.out.println(boardId);
-        System.out.println(email);
         paramsMap.put("boardId", boardId);
         paramsMap.put("email", email);
 
-        System.out.println("test " + boardMapper.getBoardLikeState(paramsMap));
         return boardMapper.getBoardLikeState(paramsMap) > 0;
     }
 
@@ -108,10 +103,8 @@ public class BoardService {
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
-        String email = principalUser.getUsername();
         paramsMap.put("boardId", boardId);
-        paramsMap.put("email", email);
-        System.out.println("set");
+        paramsMap.put("email", principalUser.getUsername());
 
         return boardMapper.insertBoardLike(paramsMap) > 0;
     }
@@ -124,10 +117,8 @@ public class BoardService {
                         .getContext()
                         .getAuthentication()
                         .getPrincipal();
-        String email = principalUser.getUsername();
         paramsMap.put("boardId", boardId);
-        paramsMap.put("email", email);
-        System.out.println("del");
+        paramsMap.put("email", principalUser.getUsername());
 
         return boardMapper.deleteBoardLike(paramsMap) > 0;
     }

@@ -38,7 +38,6 @@ function BoardUpdate(props) {
     const [ selectedOption, setSelectedOption ] = useState();
     const [ selectOptions, setSelectOptions ] = useState({});
     const queryClient = useQueryClient();
-    const principal = queryClient.getQueryState("getPrincipal");
     const { boardId } = useParams();
 
     const modules = {
@@ -51,14 +50,6 @@ function BoardUpdate(props) {
             ]
         }
     }
-
-    const [ content, setContent ] = useState({
-        boardTitle: "",
-        boardContent: "",
-        categoryId: 0,
-        categoryName: "",
-        boardId: parseInt(boardId)
-    });
 
     useEffect(()=> {
         getCategory()
@@ -92,22 +83,29 @@ function BoardUpdate(props) {
         refetchOnWindowFocus: false,
         retry: 0,
         onSuccess: response => {
-            console.log(response?.data)
-            console.log(response?.data?.boardCategoryId)
             setSelectedOption({
                 value: response?.data?.boardCategoryId,
-                label: response?.data?.boardCategoryId
+                label: response?.data?.boardCategoryName
             })
+        console.log(getBoardDetail?.data?.data)
         }
-    })
+    }
+    )
     
-
 
     useEffect(() => {
         if(selectedOption == null) {
             setSelectedOption(selectOptions[0])
         }
     }, [selectOptions]);
+
+    const [ content, setContent ] = useState({
+        boardTitle: getBoardDetail?.data?.data.boardTitle,
+        boardContent: getBoardDetail?.data?.data.boardContent,
+        categoryId: getBoardDetail?.data?.data?.boardCategoryId,
+        categoryName: getBoardDetail?.data?.data?.boardCategoryName,
+        boardId: parseInt(boardId)
+    });
 
     useEffect(() => {
         setContent({
@@ -118,16 +116,15 @@ function BoardUpdate(props) {
     }, [selectedOption])
 
 
-
     const handleUpdateSubmit = async () => {
         try {        
             await updateBoard(content);
-            window.location.back();   
+            alert("게시글이 수정되었습니다.");
+            window.location.replace(`/board/details/${content.boardId}`);   
         } catch (error) {
             
         }
     }
-
 
 
     const handleContentChange = (e) => {        
@@ -152,8 +149,7 @@ function BoardUpdate(props) {
         return <></> 
     }
     
-    
-    
+    console.log(content)
     return (
         <RootContainer>
         <div>

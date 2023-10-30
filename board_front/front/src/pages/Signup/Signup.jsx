@@ -27,7 +27,6 @@ function Signup(props) {
         console.log(signupUser)
     }
 
-    
 
     const handleSignupSubmit = async () => {
         try {
@@ -39,6 +38,7 @@ function Signup(props) {
         }
     }
 
+    
     return (
         <div>
             <div><input type='email' name='email' placeholder='이메일' onChange={handleChange}></input></div>

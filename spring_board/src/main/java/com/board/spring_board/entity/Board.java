@@ -19,6 +19,7 @@ public class Board {
     private int boardId;
     private String boardTitle;
     private int boardCategoryId;
+    private String boardCategoryName;
     private String boardContent;
     private String email;
     private String nickname;
@@ -45,6 +46,7 @@ public class Board {
                 .email(email)
                 .boardContent(boardContent)
                 .boardCategoryId(boardCategoryId)
+                .boardCategoryName(boardCategoryName)
                 .createDate(createDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)))
                 .boardHitsCount(boardHitsCount)
                 .boardLikeCount(boardLikeCount)
